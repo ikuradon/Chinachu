@@ -260,7 +260,7 @@ function scheduler() {
 
 	// check conflict
 	var conflictCount = 0;
-	var tunerThreads  = [];
+	var tunerThreads = [];
 	for (i = 0; i < tuners.length; i++) {
 		tunerThreads.push([]);
 	}
@@ -308,7 +308,7 @@ function scheduler() {
 	// reserve
 	reserves = [];
 	var reservedCount = 0;
-	var skipCount     = 0;
+	var skipCount = 0;
 	for (i = 0; i < matches.length; i++) {
 		a = matches[i];
 
@@ -641,6 +641,7 @@ function mirakurunProgramsToLegacyPrograms(ch, programs) {
 				start: program.startAt,
 				end: program.startAt + program.duration,
 				seconds: program.duration / 1000
+
 			};
 
 			if (program.extended) {
@@ -654,6 +655,33 @@ function mirakurunProgramsToLegacyPrograms(ch, programs) {
 				ret.detail = ret.detail.trim();
 			}
 
+			// video
+			if (typeof program.video !== 'undefined') {
+				ret.videoType = program.video.type;
+				ret.videoResolution = program.video.resolution;
+				ret.videoStreamContent = program.video.streamContent;
+				ret.videoComponentType = program.video.componentType;
+			}
+
+			// audio
+			if (typeof (program as any).audio !== 'undefined') {
+				ret.audioSamplingRate = (program as any).audio.samplingRate;
+				ret.audioComponentType = (program as any).audio.componentType;
+			}
+
+			// audios
+			if (typeof (program as any).audios !== 'undefined') {
+				for (const audio of (program as any).audios) {
+					// TODO 複数音声データに対応する
+					// 互換性維持のため main の音声情報だけを格納する
+					if (audio.isMain === false) {
+						continue;
+					}
+
+					ret.audioSamplingRate = audio.samplingRate;
+					ret.audioComponentType = audio.componentType;
+				}
+			}
 			return ret;
 		});
 
