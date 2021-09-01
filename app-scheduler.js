@@ -656,7 +656,7 @@ function mirakurunProgramsToLegacyPrograms(ch, programs) {
 			}
 
 			// video
-			if (typeof program.video !== 'undefined') {
+			if (program.video) {
 				ret.videoType = program.video.type;
 				ret.videoResolution = program.video.resolution;
 				ret.videoStreamContent = program.video.streamContent;
@@ -664,14 +664,14 @@ function mirakurunProgramsToLegacyPrograms(ch, programs) {
 			}
 
 			// audio
-			if (typeof (program as any).audio !== 'undefined') {
-				ret.audioSamplingRate = (program as any).audio.samplingRate;
-				ret.audioComponentType = (program as any).audio.componentType;
+			if (program.audio) {
+				ret.audioSamplingRate = program.audio.samplingRate;
+				ret.audioComponentType = program.audio.componentType;
 			}
 
 			// audios
-			if (typeof (program as any).audios !== 'undefined') {
-				for (const audio of (program as any).audios) {
+			if (program.audios) {
+				for (const audio of program.audios) {
 					// TODO 複数音声データに対応する
 					// 互換性維持のため main の音声情報だけを格納する
 					if (audio.isMain === false) {
